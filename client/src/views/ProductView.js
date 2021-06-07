@@ -34,7 +34,7 @@ const ProductView = ({ match }) => {
             </ListGroupItem>
 
             <ListGroupItem>
-              <Rating rating={rating} numReviews={numReviews} />
+              <Rating rating={rating || 0} numReviews={numReviews || 0} />
             </ListGroupItem>
 
             <ListGroupItem>
