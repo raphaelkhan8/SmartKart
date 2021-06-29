@@ -7,7 +7,9 @@
     "start": "node server/index.js",
     "server": "nodemon server/index.js",
     "client": "npm start --prefix client",
-    "dev": "concurrently \"npm run server\" \"npm run client\""
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "dataImport": "node server/seeder",
+    "dataDestroy": "node server/seeder -d"
   },
   "repository": {
     "type": "git",
