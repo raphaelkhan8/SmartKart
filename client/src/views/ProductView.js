@@ -6,7 +6,7 @@ import Rating from '../components/Rating'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
 import { listProductDetails } from '../actions/productActions'
-// import { addToCart } from '../actions/cartActions'
+import { addToCart } from '../actions/cartActions'
 
 const ProductView = ({ match, history }) => {
   const [quantity, setQuantity] = useState(0)
@@ -21,14 +21,9 @@ const ProductView = ({ match, history }) => {
   }, [dispatch, match.params.id])
 
   const addToCartHandler = () => {
-    history.push(`/cart/${match.params.id}?qty=${quantity}`)
+    dispatch(addToCart(product._id, quantity))
+    history.push('/cart')
   }
-
-//   const addToCartHandler = () => {
-//     dispatch(addToCart(product._id, quantity))
-//     history.push('/cart')
-// }
-
 
   return (
     <div>
