@@ -17,5 +17,5 @@ export const addToCart = (id, quantity) =>
       },
     })
 
-  localStorage.setItem('cartItems', JSON.stringify(getState().cart.cartItems))
+  localStorage.setItem('cartItems', JSON.stringify(getState().userCart.cartItems))
 }
