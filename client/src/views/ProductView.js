@@ -9,7 +9,7 @@ import { listProductDetails } from '../actions/productActions'
 import { addToCart } from '../actions/cartActions'
 
 const ProductView = ({ match, history }) => {
-  const [quantity, setQuantity] = useState(0)
+  const [quantity, setQuantity] = useState(1)
 
   const dispatch = useDispatch()
 

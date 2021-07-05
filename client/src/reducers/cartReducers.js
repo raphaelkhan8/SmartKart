@@ -4,11 +4,11 @@ export const userCartReducer = (state = { cartItems: [] }, action) => {
   switch(action.type){
     case ADD_TO_CART:
       const item = action.payload
-      const itemAlreadyInCart = state.cartItems.find(n => n.product === item.product)
+      const itemAlreadyInCart = state.cartItems.find(n => n.id === item.id)
       if (itemAlreadyInCart) {
         return {
           ...state, 
-          cartItems: state.cartItems.map(n => n.product === itemAlreadyInCart.product ? item: n)
+          cartItems: state.cartItems.map(n => n.id === itemAlreadyInCart.id ? item: n)
         }
       } else {
         return {
@@ -17,8 +17,9 @@ export const userCartReducer = (state = { cartItems: [] }, action) => {
         }
       }
     case REMOVE_FROM_CART:
-      return{
-        error: action.payload
+      return {
+        ...state, 
+        cartItems: state.cartItems.filter(n => n.id !== action.payload)
       }
     case GET_CART_SUCCESS:
       return {
