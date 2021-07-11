@@ -6,6 +6,7 @@ const mode = process.env.NODE_ENV
 
 const dbConnection = require('./config/db')
 const productRouter = require('./routes/productRoutes')
+const userRouter = require('./routes/userRoutes')
 const { notFound, errorHandler } = require('./middleware/error')
 
 dbConnection();
@@ -14,7 +15,9 @@ app.get('/', (req, res) => {
   res.send('Hello World!')
 })
 
+app.use(express.json())
 app.use('/api/products', productRouter)
+app.use('/api/users', userRouter)
 app.use(notFound)
 app.use(errorHandler)
 
