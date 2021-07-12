@@ -7,7 +7,7 @@ const mode = process.env.NODE_ENV
 const dbConnection = require('./config/db')
 const productRouter = require('./routes/productRoutes')
 const userRouter = require('./routes/userRoutes')
-const { notFound, errorHandler } = require('./middleware/error')
+const { notFound, errorHandler } = require('./middleware/errorMiddleware')
 
 dbConnection();
 
