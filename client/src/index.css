@@ -17,6 +17,10 @@ h3 {
   padding-top: 0;
 }
 
+.form-group {
+  margin-bottom: 0.8rem;
+}
+
 .rating span {
   margin: 0.05rem;
 }
