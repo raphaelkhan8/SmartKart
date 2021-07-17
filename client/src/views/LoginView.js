@@ -7,21 +7,35 @@ import Message from '../components/Message'
 import Loader from '../components/Loader'
 import { login } from '../actions/userActions'
 
-const LoginView = ({ location }) => {
+const LoginView = ({ location, history }) => {
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
+  const dispatch = useDispatch()
+
+  const userLoginInfo = useSelector(state => state.userLogin)
+  const { loading, error, userInfo } = userLoginInfo
+
   // location.search corresponds to the url query string 
   const redirect = location.search ? location.search.split('=')[1] : '/'
 
+  // redirect to home if user is already logged-in
+  useEffect(() => {
+    if (userInfo) {
+      history.push(redirect) 
+    }
+  }, [redirect, userInfo, history])
+
   const submitHandler = (e) => {
     e.preventDefault()
-    // DISPATCH LOGIN
+    dispatch(login(email, password))
   }
 
   return (
     <FormContainer>
+      {error && <Message variant='danger'>{error}</Message>}
+      {loading && <Loader />}
       <h1>Sign In</h1>
       <Form onSubmit={submitHandler}>
         <FormGroup controlId='email'>
