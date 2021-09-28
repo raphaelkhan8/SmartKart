@@ -3,7 +3,8 @@ import { Col, Row, Form, Button, FormGroup, FormLabel, FormControl } from 'react
 import { useDispatch, useSelector } from 'react-redux'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
-import { getUserDetails } from '../actions/userActions'
+import { getUserDetails, updateUserProfile } from '../actions/userActions'
+import { USER_UPDATE_PROFILE_RESET } from '../constants/userConstants'
 
 const ProfileView = ({ history }) => {
 
@@ -12,6 +13,7 @@ const ProfileView = ({ history }) => {
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [message, setMessage] = useState(null)
+  const [updated, setUpdated] = useState(false)
 
   const dispatch = useDispatch()
 
@@ -26,28 +28,33 @@ const ProfileView = ({ history }) => {
     if (!userInfo) {
       history.push('/login') 
     } else {
-        if (!user.name) {
-            dispatch(getUserDetails('profile'))
+        if (!user || !user.name) {
+          dispatch({ type: USER_UPDATE_PROFILE_RESET })
+          dispatch(getUserDetails('profile'))
         } else {
-            setUsername(user.name)
-            setEmail(user.email)
+          setUsername(user.name)
+          setEmail(user.email)
         }
     }
   }, [userInfo, user, dispatch, history])
 
   const submitHandler = (e) => {
+    setMessage(null)
+    setUpdated(false)
     e.preventDefault()
     // check passwords before dispatching register action
     if (password !== confirmPassword) {
       setMessage('Passwords do not match')
     } else {
-      // DISPATCH UPDATE PROFILE
+      setUpdated(true)
+      dispatch(updateUserProfile({ id: user._id, name: username, email, password }))
     }
   }
 
   return <Row>
       <Col md={3}>
         {message && <Message variant='danger'>{message}</Message>}
+        {updated && <Message variant='success'>Profile Updated</Message>}
         {error && <Message variant='danger'>{error}</Message>}
         {loading && <Loader />}
         <h2>My Profile</h2>
@@ -64,12 +71,12 @@ const ProfileView = ({ history }) => {
 
             <FormGroup controlId='password'>
             <FormLabel>Password</FormLabel>
-            <FormControl type='password' placeholder='Enter password' value={password} onChange={(e) => {setPassword(e.target.value)}}></FormControl>
+            <FormControl type='password' placeholder='Type new password here' value={password} onChange={(e) => {setPassword(e.target.value)}}></FormControl>
             </FormGroup>
 
             <FormGroup controlId='confirmPassword'>
             <FormLabel>Confirm Password</FormLabel>
-            <FormControl type='password' placeholder='Confirm password' value={confirmPassword} onChange={(e) => {setConfirmPassword(e.target.value)}}></FormControl>
+            <FormControl type='password' placeholder='Confirm new password' value={confirmPassword} onChange={(e) => {setConfirmPassword(e.target.value)}}></FormControl>
             </FormGroup>
 
             <Button type='submit' variant='primary'>Update</Button>
