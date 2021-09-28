@@ -1,5 +1,6 @@
 import axios from 'axios'
-import { USER_LOGIN_FAIL, USER_LOGIN_REQUEST, USER_LOGIN_SUCCESS, USER_LOGOUT, 
+import { USER_DETAILS_FAIL, USER_DETAILS_REQUEST, USER_DETAILS_SUCCESS, 
+  USER_LOGIN_FAIL, USER_LOGIN_REQUEST, USER_LOGIN_SUCCESS, USER_LOGOUT, 
   USER_REGISTER_FAIL, USER_REGISTER_REQUEST, USER_REGISTER_SUCCESS } from '../constants/userConstants'
 
 
@@ -36,11 +37,13 @@ export const login = (email, password) => async (dispatch) => {
   }
 }
 
+
 // sends dispatch to logout user 
 export const logout = () => (dispatch) => {
   localStorage.removeItem('userInfo')
   dispatch({ type: USER_LOGOUT })
 } 
+
 
 // sends dispatch request to server to save a new user
 export const register = (name, email, password) => async (dispatch) => {
@@ -72,6 +75,39 @@ export const register = (name, email, password) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: USER_REGISTER_FAIL,
+      payload: error.response && error.response.data.message ? error.response.data.message : error.message
+    })
+  }
+}
+
+
+// sends dispatch request to server to get user's profile info by id
+export const getUserDetails = (id) => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: USER_DETAILS_REQUEST
+    })
+
+    const { token } = getState().userLogin.userInfo
+
+    const config = {
+      headers: { 
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      }
+    }
+
+    const { data } = await axios.get(`/api/users/${id}`, config)
+
+    dispatch({
+      type: USER_DETAILS_SUCCESS,
+      payload: data
+    })
+
+    // if something goes wrong, dispatch login error reducer
+  } catch (error) {
+    dispatch({
+      type: USER_DETAILS_FAIL,
       payload: error.response && error.response.data.message ? error.response.data.message : error.message
     })
   }
