@@ -8,7 +8,7 @@ import { USER_UPDATE_PROFILE_RESET } from '../constants/userConstants'
 
 const ProfileView = ({ history }) => {
 
-  const [username, setUsername] = useState('')
+  const [name, setUsername] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
@@ -28,9 +28,9 @@ const ProfileView = ({ history }) => {
     if (!userInfo) {
       history.push('/login') 
     } else {
-        if (!user || !user.name) {
-          dispatch({ type: USER_UPDATE_PROFILE_RESET })
+        if (!user || !user.name || updated) {
           dispatch(getUserDetails('profile'))
+          dispatch({ type: USER_UPDATE_PROFILE_RESET })
         } else {
           setUsername(user.name)
           setEmail(user.email)
@@ -47,7 +47,7 @@ const ProfileView = ({ history }) => {
       setMessage('Passwords do not match')
     } else {
       setUpdated(true)
-      dispatch(updateUserProfile({ id: user._id, name: username, email, password }))
+      dispatch(updateUserProfile({ id: user._id, name, email, password }))
     }
   }
 
@@ -61,7 +61,7 @@ const ProfileView = ({ history }) => {
         <Form onSubmit={submitHandler}>
         <FormGroup controlId='username'>
             <FormLabel>Username</FormLabel>
-            <FormControl type='username' placeholder='Enter username' value={username} onChange={(e) => {setUsername(e.target.value)}}></FormControl>
+            <FormControl type='username' placeholder='Enter username' value={name} onChange={(e) => {setUsername(e.target.value)}}></FormControl>
             </FormGroup>
 
             <FormGroup controlId='email'>
