@@ -36,7 +36,7 @@ const ProfileView = ({ history }) => {
           setEmail(user.email)
         }
     }
-  }, [userInfo, user, dispatch, history])
+  }, [userInfo, JSON.stringify(user), updated, dispatch, history])
 
   const submitHandler = (e) => {
     setMessage(null)
