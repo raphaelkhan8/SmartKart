@@ -9,6 +9,7 @@ import LoginView from './views/LoginView'
 import RegisterView from './views/RegisterView'
 import ProfileView from './views/ProfileView'
 import ShippingView from './views/ShippingView'
+import PaymentView from './views/PaymentView'
 
 const App = () => {
   return (
@@ -23,6 +24,7 @@ const App = () => {
           <Route path='/product/:id' component={ProductView} />
           <Route path='/cart/:id?' component={CartView} />
           <Route path='/shipping' component={ShippingView} />
+          <Route path='/payment' component={PaymentView} />
         </Container>
       </main>
       <Footer />

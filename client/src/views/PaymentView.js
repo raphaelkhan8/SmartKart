@@ -30,13 +30,22 @@ const PaymentView = ({ history }) => {
 			<Form onSubmit={submitHandler}>
 				<FormGroup>
 					<FormLabel as='legend'>Select Method</FormLabel>
+					<Col>
+						<FormCheck type='radio' label='PayPal' id='PayPal' name='paymentMethod' value='PayPal' checked
+							onChange={(e) => setPaymentMethod(e.target.value)}>
+						</FormCheck>
+					</Col>
+					<Col>
+						<FormCheck type='radio' label='Credit Card' id='Credit Card' name='paymentMethod' value='Credit Card'
+							onChange={(e) => setPaymentMethod(e.target.value)}>
+						</FormCheck>
+					</Col>
+					<Col>
+						<FormCheck type='radio' label='Gift Card' id='Gift Card' name='paymentMethod' value='Gift Card'
+							onChange={(e) => setPaymentMethod(e.target.value)}>
+						</FormCheck>
+					</Col>
 				</FormGroup>
-				<Col>
-					<FormCheck type='radio' label='PayPal' id='PayPal' name='paymentMethod' value='PayPal' checked
-						onChange={(e) => setPaymentMethod(e.target.value)}>
-					</FormCheck>
-				</Col>
-
 				<Button type='submit' variant='primary'>Continue</Button>
 			</Form>
 		</FormContainer>
