@@ -1,4 +1,4 @@
-import { ADD_TO_CART, REMOVE_FROM_CART, GET_CART_SUCCESS, GET_CART_ERROR } from '../constants/cartConstants'
+import { ADD_TO_CART, REMOVE_FROM_CART, GET_CART_SUCCESS, GET_CART_ERROR, CART_SAVE_SHIPPING_ADDRESS } from '../constants/cartConstants'
 
 export const cartReducer = (state = { cartItems: [] }, action) => {
   switch(action.type){
@@ -28,6 +28,11 @@ export const cartReducer = (state = { cartItems: [] }, action) => {
     case GET_CART_ERROR:
       return{
         error: action.payload
+      }
+    case CART_SAVE_SHIPPING_ADDRESS:
+      return {
+        ...state, 
+        shippingAddress: action.payload
       }
     default: 
       return state
