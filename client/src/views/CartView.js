@@ -65,7 +65,7 @@ const CartView = ({ history }) => {
           </ListGroup>
         )}
       </Col>
-      <Col md={4}>
+      <Col md={3}>
         <Card>
           <ListGroup variant='flush'>
             <ListGroupItem>
@@ -73,7 +73,7 @@ const CartView = ({ history }) => {
               ${cartItems.reduce((acc, item) => acc + item.quantity * item.price, 0).toFixed(2)}
             </ListGroupItem>
             <ListGroupItem>
-              <Button type='button' className='btn-block' disabled={cartItems.length === 0} onClick={checkoutHandler}>
+              <Button type='button' className='d-grid gap-2' disabled={cartItems.length === 0} onClick={checkoutHandler}>
                 Proceed To Checkout
               </Button>
             </ListGroupItem>
