@@ -1,24 +1,42 @@
-import React, { useState } from 'react'
+import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { Row, Col, ListGroup, Image, Card, Button, ListGroupItem } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import CheckoutSteps from '../components/CheckoutSteps'
 import Message from '../components/Message'
+import { createOrder } from '../actions/orderActions'
 
-const PlaceOrderView = () => {
+const PlaceOrderView = ({ history }) => {
+	const dispatch = useDispatch()
+
 	const { shippingAddress, paymentMethod, cartItems } = useSelector(state => state.cart)
 	const { address, city, zipcode, country } = shippingAddress
-
-	const placeOrderHandler = () => {
-		// TODO: Send order info to back-end
-		console.log('Order Placed')
-	}
 
 	// Calculate prices
 	const itemsPrice = (cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0)).toFixed(2)
 	const shippingPrice = itemsPrice > 100 ? (itemsPrice * 0.15).toFixed(2) : (itemsPrice * 0.1).toFixed(2)
 	const taxPrice = (itemsPrice * 0.1).toFixed(2)
 	const totalPrice = Number(itemsPrice) + Number(shippingPrice) + Number(taxPrice)
+
+	const { order, success, error } = useSelector(state => state.orderCreate)
+
+	useEffect(() => {
+		console.log(order)
+		// history.push(`/order/${order._id}`)
+		// // eslint-disable-next-line
+	}, [history, success])
+
+	const placeOrderHandler = () => {
+		dispatch(createOrder({
+			orderItems: cartItems,
+			shippingAddress,
+			paymentMethod,
+			itemsPrice,
+			shippingPrice,
+			taxPrice,
+			totalPrice
+		}))
+	}
 
 	return (
 		<div>
@@ -96,6 +114,10 @@ const PlaceOrderView = () => {
 									<Col>Total</Col>
 									<Col>${totalPrice}</Col>
 								</Row>
+							</ListGroupItem>
+
+							<ListGroupItem>
+								{error && <Message variant='danger'>{error}</Message>}
 							</ListGroupItem>
 
 							<ListGroupItem className='d-grid gap-2'>
