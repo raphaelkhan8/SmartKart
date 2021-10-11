@@ -11,6 +11,7 @@ const ShippingView = ({ history }) => {
 
 	const [address, setAddress] = useState(shippingAddress.address || '')
 	const [city, setCity] = useState(shippingAddress.city || '')
+	const [state, setState] = useState(shippingAddress.state || '')
 	const [zipcode, setZipcode] = useState(shippingAddress.zipcode || '')
 	const [country, setCountry] = useState(shippingAddress.country || '')
 	
@@ -38,6 +39,13 @@ const ShippingView = ({ history }) => {
 					<FormLabel>City</FormLabel>
 					<FormControl type='city' placeholder='Enter city' value={city} required 
 						onChange={(e) => {setCity(e.target.value)}}>
+					</FormControl>
+				</FormGroup>
+
+				<FormGroup controlId='state'>
+					<FormLabel>City</FormLabel>
+					<FormControl type='state' placeholder='Enter state' value={state} required 
+						onChange={(e) => {setState(e.target.value)}}>
 					</FormControl>
 				</FormGroup>
 
