@@ -21,7 +21,9 @@ const PlaceOrderView = ({ history }) => {
 	const { order, success, error } = useSelector(state => state.orderCreate)
 
 	useEffect(() => {
-		history.push(`/order/${order._id}`)
+		if (order) {
+			history.push(`/order/${order._id}`)
+		}
 		// eslint-disable-next-line
 	}, [history, success])
 
