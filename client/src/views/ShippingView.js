@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { saveShippingAddress } from '../actions/cartActions'
 import FormContainer from '../components/FormContainer'
 import CheckoutSteps from '../components/CheckoutSteps'
+import { states } from '../constants/states'
 
 const ShippingView = ({ history }) => {
 
@@ -43,10 +44,14 @@ const ShippingView = ({ history }) => {
 				</FormGroup>
 
 				<FormGroup controlId='state'>
-					<FormLabel>State</FormLabel>
-					<FormControl type='state' placeholder='Enter state' value={state} required 
-						onChange={(e) => {setState(e.target.value)}}>
-					</FormControl>
+        			<FormLabel>Select State</FormLabel>
+        			<FormControl as="select" value={state} required
+          				onChange={e => { setState(e.target.value)}}>
+						{states.map(state => {
+							const { name, abbrev } = state
+							return <option key={abbrev} value={name}>{name}</option>
+						})}
+				 	</FormControl>
 				</FormGroup>
 
 				<FormGroup controlId='zipcode'>
