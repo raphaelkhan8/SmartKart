@@ -10,18 +10,17 @@ const PlaceOrderView = ({ history }) => {
 	const dispatch = useDispatch()
 
 	const { shippingAddress, paymentMethod, cartItems } = useSelector(state => state.cart)
-	const { address, city, zipcode, country } = shippingAddress
+	const { address, city, state, zipcode, country } = shippingAddress
 
 	// Calculate prices
 	const itemsPrice = (cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0)).toFixed(2)
 	const shippingPrice = itemsPrice > 100 ? (itemsPrice * 0.15).toFixed(2) : (itemsPrice * 0.1).toFixed(2)
 	const taxPrice = (itemsPrice * 0.1).toFixed(2)
-	const totalPrice = Number(itemsPrice) + Number(shippingPrice) + Number(taxPrice)
+	const totalPrice = (Number(itemsPrice) + Number(shippingPrice) + Number(taxPrice)).toFixed(2)
 
 	const { order, success, error } = useSelector(state => state.orderCreate)
 
 	useEffect(() => {
-		console.log(order)
 		// history.push(`/order/${order._id}`)
 		// // eslint-disable-next-line
 	}, [history, success])
@@ -31,10 +30,10 @@ const PlaceOrderView = ({ history }) => {
 			orderItems: cartItems,
 			shippingAddress,
 			paymentMethod,
-			itemsPrice,
-			shippingPrice,
-			taxPrice,
-			totalPrice
+			itemsPrice : Number(itemsPrice),
+			shippingPrice: Number(shippingPrice),
+			taxPrice: Number(taxPrice),
+			totalPrice : Number(totalPrice)
 		}))
 	}
 
@@ -47,7 +46,7 @@ const PlaceOrderView = ({ history }) => {
 						<ListGroupItem>
 							<h2>Shipping</h2>
 							<p>
-								<strong>Address: </strong>{address}, {city} {zipcode} {country}
+								<strong>Address: </strong>{address}, {city}, {state} {zipcode} {country}
 							</p>
 						</ListGroupItem>
 

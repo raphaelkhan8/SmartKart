@@ -19,7 +19,7 @@ const ShippingView = ({ history }) => {
 	
 	const submitHandler = (e) => {
 		e.preventDefault()
-		dispatch(saveShippingAddress({ address, city, zipcode, country }))
+		dispatch(saveShippingAddress({ address, city, state, zipcode, country }))
 		history.push('/payment')
 	}
 
@@ -43,7 +43,7 @@ const ShippingView = ({ history }) => {
 				</FormGroup>
 
 				<FormGroup controlId='state'>
-					<FormLabel>City</FormLabel>
+					<FormLabel>State</FormLabel>
 					<FormControl type='state' placeholder='Enter state' value={state} required 
 						onChange={(e) => {setState(e.target.value)}}>
 					</FormControl>

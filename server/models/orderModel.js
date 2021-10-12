@@ -11,7 +11,7 @@ const orderSchema = mongoose.Schema({
     image: { type: String, required: true },
     quantity: { type: Number, required: true },
     price: { type: Number, required: true },
-    product: { 
+    id: { 
       type: mongoose.Schema.Types.ObjectId, 
       required: true,
       ref: 'Product'
@@ -63,11 +63,6 @@ const orderSchema = mongoose.Schema({
     type: Date,
   },
   isDelivered: {
-    type: Boolean,
-    required: true,
-    default: false
-  },
-  isAdmin: {
     type: Boolean,
     required: true,
     default: false
