@@ -12,7 +12,7 @@ const OrderView = ({ match }) => {
 	const orderId = match.params.id
 
 	const { order, loading, error } = useSelector(state => state.orderDetails)
-	const { orderItems, paymentMethod, shippingAddress, user } = order || {}
+	const { orderItems, paymentMethod, shippingAddress, user, isPaid, paidAt, isDelivered, deliveredAt } = order || {}
 	const { address, city, state, zipcode, country } = shippingAddress || {}
 
 	if (!loading) {
@@ -39,16 +39,22 @@ const OrderView = ({ match }) => {
 								<strong>Name: </strong> {user.name}
 							</p>
 							<p>
-							<strong>Email: </strong> <a href={`mailto:${user.email}`}>{user.email}</a>
+								<strong>Email: </strong> <a href={`mailto:${user.email}`}>{user.email}</a>
 							</p>
 							<p>
 								<strong>Address: </strong> {address}, {city}, {state} {zipcode} {country}
 							</p>
+							{isDelivered ? <Message variant='success'>Delivered on {deliveredAt}</Message> : 
+								<Message variant='danger'>Order not delivered</Message>}
 						</ListGroupItem>
 
 						<ListGroupItem>
 							<h2>Payment Method</h2>
-							<strong>Method: </strong>{paymentMethod}
+							<p>
+								<strong>Method: </strong>{paymentMethod}
+							</p>
+							{isPaid ? <Message variant='success'>Paid on {paidAt}</Message> : 
+								<Message variant='danger'>Order not paid</Message>}
 						</ListGroupItem>
 
 						<ListGroupItem>
