@@ -12,13 +12,19 @@ const OrderView = ({ match }) => {
 	const orderId = match.params.id
 
 	const { order, loading, error } = useSelector(state => state.orderDetails)
-	const { orderItems, paymentMethod, itemsPrice, taxPrice, shippingPrice, totalPrice, shippingAddress } = order || {}
+	const { orderItems, paymentMethod, shippingAddress, user } = order || {}
 	const { address, city, state, zipcode, country } = shippingAddress || {}
 
+	if (!loading) {
+		// Calculate prices
+		order.itemsPrice = (orderItems.reduce((acc, item) => acc + (item.price * item.quantity), 0)).toFixed(2)
+		order.shippingPrice = order.itemsPrice > 100 ? (order.itemsPrice * 0.15).toFixed(2) : (order.itemsPrice * 0.1).toFixed(2)
+		order.taxPrice = (order.itemsPrice * 0.1).toFixed(2)
+		order.totalPrice = (Number(order.itemsPrice) + Number(order.shippingPrice) + Number(order.taxPrice)).toFixed(2)
+	}
+
 	useEffect(() => {
-		console.log(orderId)
 		dispatch(getOrderDetails(orderId))
-		// eslint-disable-next-line
 	}, [])
 
 	return loading ? <Loader /> : error ? <Message variant='danger'>{error}</Message> : 
@@ -30,7 +36,13 @@ const OrderView = ({ match }) => {
 						<ListGroupItem>
 							<h2>Shipping</h2>
 							<p>
-								<strong>Address: </strong>{address}, {city}, {state} {zipcode} {country}
+								<strong>Name: </strong> {user.name}
+							</p>
+							<p>
+							<strong>Email: </strong> <a href={`mailto:${user.email}`}>{user.email}</a>
+							</p>
+							<p>
+								<strong>Address: </strong> {address}, {city}, {state} {zipcode} {country}
 							</p>
 						</ListGroupItem>
 
@@ -74,28 +86,28 @@ const OrderView = ({ match }) => {
 							<ListGroupItem>
 								<Row>
 									<Col>Items</Col>
-									<Col>${itemsPrice}</Col>
+									<Col>${order.itemsPrice}</Col>
 								</Row>
 							</ListGroupItem>
 
 							<ListGroupItem>
 								<Row>
 									<Col>Shipping</Col>
-									<Col>${shippingPrice}</Col>
+									<Col>${order.shippingPrice}</Col>
 								</Row>
 							</ListGroupItem>
 
 							<ListGroupItem>
 								<Row>
 									<Col>Tax</Col>
-									<Col>${taxPrice}</Col>
+									<Col>${order.taxPrice}</Col>
 								</Row>
 							</ListGroupItem>
 
 							<ListGroupItem>
 								<Row>
 									<Col>Total</Col>
-									<Col>${totalPrice}</Col>
+									<Col>${order.totalPrice}</Col>
 								</Row>
 							</ListGroupItem>
 
