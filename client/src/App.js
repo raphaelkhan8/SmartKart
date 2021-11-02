@@ -11,6 +11,7 @@ import ProfileView from './views/ProfileView'
 import ShippingView from './views/ShippingView'
 import PaymentView from './views/PaymentView'
 import PlaceOrderView from './views/PlaceOrderView'
+import OrderView from './views/OrderView'
 
 const App = () => {
   return (
@@ -27,6 +28,7 @@ const App = () => {
           <Route path='/shipping' component={ShippingView} />
           <Route path='/payment' component={PaymentView} />
           <Route path='/placeorder' component={PlaceOrderView} />
+          <Route path='/order/:id' component={OrderView} />
         </Container>
       </main>
       <Footer />
