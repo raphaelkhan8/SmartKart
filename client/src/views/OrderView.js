@@ -12,20 +12,15 @@ const OrderView = ({ match }) => {
 	const orderId = match.params.id
 
 	const { order, loading, error } = useSelector(state => state.orderDetails)
-	const { orderItems, paymentMethod, shippingAddress, user, isPaid, paidAt, isDelivered, deliveredAt } = order || {}
+	const { orderItems, paymentMethod, shippingAddress, itemsPrice, shippingPrice, taxPrice, totalPrice,
+		 user, isPaid, paidAt, isDelivered, deliveredAt } = order || {}
 	const { address, city, state, zipcode, country } = shippingAddress || {}
 
-	if (!loading) {
-		// Calculate prices
-		order.itemsPrice = (orderItems.reduce((acc, item) => acc + (item.price * item.quantity), 0)).toFixed(2)
-		order.shippingPrice = order.itemsPrice > 100 ? (order.itemsPrice * 0.15).toFixed(2) : (order.itemsPrice * 0.1).toFixed(2)
-		order.taxPrice = (order.itemsPrice * 0.1).toFixed(2)
-		order.totalPrice = (Number(order.itemsPrice) + Number(order.shippingPrice) + Number(order.taxPrice)).toFixed(2)
-	}
-
 	useEffect(() => {
-		dispatch(getOrderDetails(orderId))
-	}, [])
+		if (!order || order._id !== orderId) {
+			dispatch(getOrderDetails(orderId))
+		}
+	}, [order, orderId])
 
 	return loading ? <Loader /> : error ? <Message variant='danger'>{error}</Message> : 
 		<div>
@@ -92,28 +87,28 @@ const OrderView = ({ match }) => {
 							<ListGroupItem>
 								<Row>
 									<Col>Items</Col>
-									<Col>${order.itemsPrice}</Col>
+									<Col>${itemsPrice}</Col>
 								</Row>
 							</ListGroupItem>
 
 							<ListGroupItem>
 								<Row>
 									<Col>Shipping</Col>
-									<Col>${order.shippingPrice}</Col>
+									<Col>${shippingPrice}</Col>
 								</Row>
 							</ListGroupItem>
 
 							<ListGroupItem>
 								<Row>
 									<Col>Tax</Col>
-									<Col>${order.taxPrice}</Col>
+									<Col>${taxPrice}</Col>
 								</Row>
 							</ListGroupItem>
 
 							<ListGroupItem>
 								<Row>
 									<Col>Total</Col>
-									<Col>${order.totalPrice}</Col>
+									<Col>${totalPrice}</Col>
 								</Row>
 							</ListGroupItem>
 
