@@ -1,5 +1,6 @@
-import React, { useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import axios from 'axios'
 import { Row, Col, ListGroup, Image, Card, ListGroupItem } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import Loader from '../components/Loader'
@@ -11,16 +12,41 @@ const OrderView = ({ match }) => {
 
 	const orderId = match.params.id
 
+	const [sdkReady, setSdkReady] = useState(false)
+
 	const { order, loading, error } = useSelector(state => state.orderDetails)
 	const { orderItems, paymentMethod, shippingAddress, itemsPrice, shippingPrice, taxPrice, totalPrice,
 		 user, isPaid, paidAt, isDelivered, deliveredAt } = order || {}
 	const { address, city, state, zipcode, country } = shippingAddress || {}
 
+	// rename loading to loadingPay and success to successPay in order to avoid confusion
+	const { loading: loadingPay, success: successPay } = useSelector(state => state.orderPaid)
+
 	useEffect(() => {
-		if (!order || order._id !== orderId) {
-			dispatch(getOrderDetails(orderId))
+		// dynamically add PayPal script to OrderView html
+		const addPayPalScript = async () => {
+			const { data: clientId } = await axios.get('/api/config/paypal')
+			const script = document.createElement('script')
+			script.type = 'text/javascript'
+			script.async = true
+			script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}`
+			script.onload = () => {
+				setSdkReady(true)
+			}
+			document.body.appendChild(script)
 		}
-	}, [dispatch, order, orderId])
+
+		if (!order || successPay) {
+			dispatch(getOrderDetails(orderId))
+		} else if (!order.isPaid) {
+			if (!window.paypal) {
+				addPayPalScript()
+			} else {
+				setSdkReady(true)
+			}
+		}
+	}, [dispatch, order, orderId, successPay])
+
 
 	return loading ? <Loader /> : error ? <Message variant='danger'>{error}</Message> : 
 		<div>
