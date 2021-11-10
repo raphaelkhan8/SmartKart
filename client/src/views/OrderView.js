@@ -55,6 +55,21 @@ const OrderView = ({ match }) => {
 		dispatch(payOrder(orderId, paymentResult))
 	}
 
+	const formatDate = (dateFromDb) => {
+		const date = new Date(dateFromDb)
+		const month = date.getMonth() + 1
+		const day = date.getDate()
+		const year = date.getFullYear()
+		let hours = date.getHours()
+		let minutes = date.getMinutes()
+		const ampm = hours >= 12 ? 'pm' : 'am';
+		hours = hours % 12;
+		hours = hours ? hours : 12;
+		minutes = minutes < 10 ? '0'+ minutes : minutes;
+
+		return month + '/' + day + '/' + year + ' @ ' + hours + ':' + minutes + ampm
+	}
+
 
 	return loading ? <Loader /> : error ? <Message variant='danger'>{error}</Message> : 
 		<div>
@@ -73,7 +88,7 @@ const OrderView = ({ match }) => {
 							<p>
 								<strong>Address: </strong> {address}, {city}, {state} {zipcode} {country}
 							</p>
-							{isDelivered ? <Message variant='success'>Delivered on {deliveredAt}</Message> : 
+							{isDelivered ? <Message variant='success'>Delivered on {formatDate(deliveredAt)}</Message> : 
 								<Message variant='danger'>Order not delivered</Message>}
 						</ListGroupItem>
 
@@ -82,7 +97,7 @@ const OrderView = ({ match }) => {
 							<p>
 								<strong>Method: </strong>{paymentMethod}
 							</p>
-							{isPaid ? <Message variant='success'>Paid on {paidAt}</Message> : 
+							{isPaid ? <Message variant='success'>Paid on {formatDate(paidAt)}</Message> : 
 								<Message variant='danger'>Order not paid</Message>}
 						</ListGroupItem>
 
