@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import { PayPalButton } from 'react-paypal-button-v2'
 import axios from 'axios'
 import { Row, Col, ListGroup, Image, Card, ListGroupItem } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import Loader from '../components/Loader'
 import Message from '../components/Message'
-import { getOrderDetails } from '../actions/orderActions'
+import { getOrderDetails, payOrder } from '../actions/orderActions'
+import { ORDER_PAY_RESET } from '../constants/orderConstants'
 
 const OrderView = ({ match }) => {
 	const dispatch = useDispatch()
@@ -37,6 +39,7 @@ const OrderView = ({ match }) => {
 		}
 
 		if (!order || successPay) {
+			dispatch({ type: ORDER_PAY_RESET })
 			dispatch(getOrderDetails(orderId))
 		} else if (!order.isPaid) {
 			if (!window.paypal) {
@@ -46,6 +49,11 @@ const OrderView = ({ match }) => {
 			}
 		}
 	}, [dispatch, order, orderId, successPay])
+
+	const successPaymentHandler = (paymentResult) => {
+		console.log(paymentResult)
+		dispatch(payOrder(orderId, paymentResult))
+	}
 
 
 	return loading ? <Loader /> : error ? <Message variant='danger'>{error}</Message> : 
@@ -137,7 +145,15 @@ const OrderView = ({ match }) => {
 									<Col>${totalPrice}</Col>
 								</Row>
 							</ListGroupItem>
-
+							
+							{!order.isPaid && (
+								<ListGroupItem>
+									{loadingPay && <Loader />}
+									{!sdkReady ? <Loader /> : (
+										<PayPalButton amount={totalPrice} onSuccess={successPaymentHandler} />
+									)}
+								</ListGroupItem>
+							)}
 						</ListGroup>
 					</Card>
 				</Col>
