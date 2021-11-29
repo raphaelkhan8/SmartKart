@@ -8,6 +8,7 @@ import Loader from '../components/Loader'
 import Message from '../components/Message'
 import { getOrderDetails, payOrder } from '../actions/orderActions'
 import { ORDER_PAY_RESET } from '../constants/orderConstants'
+import { formatDate } from '../helpers'
 
 const OrderView = ({ match }) => {
 	const dispatch = useDispatch()
@@ -53,21 +54,6 @@ const OrderView = ({ match }) => {
 	const successPaymentHandler = (paymentResult) => {
 		console.log(paymentResult)
 		dispatch(payOrder(orderId, paymentResult))
-	}
-
-	const formatDate = (dateFromDb) => {
-		const date = new Date(dateFromDb)
-		const month = date.getMonth() + 1
-		const day = date.getDate()
-		const year = date.getFullYear()
-		let hours = date.getHours()
-		let minutes = date.getMinutes()
-		const ampm = hours >= 12 ? 'pm' : 'am';
-		hours = hours % 12;
-		hours = hours ? hours : 12;
-		minutes = minutes < 10 ? '0'+ minutes : minutes;
-
-		return month + '/' + day + '/' + year + ' @ ' + hours + ':' + minutes + ampm
 	}
 
 
