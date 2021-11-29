@@ -23,8 +23,9 @@ const createOrder = asyncErrorHandler(async (req, res) => {
 })
 
 
+// Get an order by id
 const getOrderById = asyncErrorHandler(async (req, res) => {
-  // get the order by id and attach the corresponding user's name and email to the found object
+  // find the order by id and attach the corresponding user's name and email to the found object
   const order = await Order.findById(req.params.id).populate('user', 'name email')
 
   if (order) {
@@ -36,6 +37,7 @@ const getOrderById = asyncErrorHandler(async (req, res) => {
 })
 
 
+// Set order to paid
 const updateOrderToPaid = asyncErrorHandler(async (req, res) => {
   const order = await Order.findById(req.params.id)
 
@@ -61,4 +63,11 @@ const updateOrderToPaid = asyncErrorHandler(async (req, res) => {
 })
 
 
-module.exports = { createOrder, getOrderById, updateOrderToPaid }
+// Get a logged-in user's orders
+const getUserOrders = asyncErrorHandler(async (req, res) => {
+  const orders = await Order.find({ user: req.user._id })
+  res.json(orders)
+})
+
+
+module.exports = { createOrder, getOrderById, updateOrderToPaid, getUserOrders }
