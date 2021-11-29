@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { saveShippingAddress } from '../actions/cartActions'
 import FormContainer from '../components/FormContainer'
 import CheckoutSteps from '../components/CheckoutSteps'
-import { states } from '../constants/states'
+import { states } from '../utils/states'
 
 const ShippingView = ({ history }) => {
 
