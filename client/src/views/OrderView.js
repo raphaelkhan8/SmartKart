@@ -8,7 +8,7 @@ import Loader from '../components/Loader'
 import Message from '../components/Message'
 import { getOrderDetails, payOrder } from '../actions/orderActions'
 import { ORDER_PAY_RESET } from '../constants/orderConstants'
-import { formatDate } from '../helpers'
+import { formatDate } from '../utils/helpers'
 
 const OrderView = ({ match }) => {
 	const dispatch = useDispatch()
