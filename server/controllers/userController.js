@@ -107,5 +107,12 @@ const updateUserProfile = asyncErrorHandler(async (req, res) => {
 })
 
 
+// Gets all users from database (needs admin privileges))
+const getAllUsers = asyncErrorHandler(async (req, res) => {
+  const users = await User.find({})
+  res.json(users)
+})
 
-module.exports = { createUser, authUser, getUserProfile, updateUserProfile } 
+
+
+module.exports = { createUser, authUser, getUserProfile, updateUserProfile, getAllUsers } 
