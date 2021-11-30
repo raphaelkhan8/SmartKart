@@ -28,7 +28,17 @@ const protectRoutes = asyncErrorHandler(async (req, res, next) => {
     res.status(401)
     throw new Error('Not autorized, no token')
   }
-
 })
 
-module.exports = protectRoutes
+// Middleware to check if user is admin
+const isAdmin = (req, res, next) => {
+  const { user } = req
+  if (user && user.isAdmin) {
+    next()
+  } else {
+    res.status(401)
+    throw new Error('Not authorized. Must be an admin.')
+  }
+}
+
+module.exports = { protectRoutes, isAdmin } 
