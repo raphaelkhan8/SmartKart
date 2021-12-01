@@ -4,22 +4,34 @@ import { LinkContainer } from 'react-router-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
-import { listUsers } from '../actions/userActions'
+import { listUsers, deleteUser } from '../actions/userActions'
 
-const UserListView = () => {
+const UserListView = ({ history }) => {
 
   const dispatch = useDispatch()
 
   const userList = useSelector(state => state.userList)
   const { loading, error, users } = userList
 
-  // redirect to home if login page if users is not logged-in
+	const userLogin = useSelector(state => state.userLogin)
+	const { userInfo } = userLogin
+
+	const { success:successDelete } = useSelector(state => state.userDelete)
+
+  // only send dispatch if user is logged-in and an admin
   useEffect(() => {
-    dispatch(listUsers())
-  }, [dispatch])
+		if (userInfo && userInfo.isAdmin) {
+			dispatch(listUsers())
+		} else {
+			history.push('/login')
+		}
+  }, [dispatch, history, userInfo, successDelete])
+	
 
 	const deleteUserHandler = (userId) => {
-		console.log(`Deleting user: ${userId}`)
+		if (window.confirm('Are you sure you want to delete this user?')) {
+			dispatch(deleteUser(userId))
+		}
 	}
 
 
