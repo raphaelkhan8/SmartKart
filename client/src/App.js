@@ -12,6 +12,7 @@ import ShippingView from './views/ShippingView'
 import PaymentView from './views/PaymentView'
 import PlaceOrderView from './views/PlaceOrderView'
 import OrderView from './views/OrderView'
+import UserListView from './views/UserListView'
 
 const App = () => {
   return (
@@ -29,6 +30,7 @@ const App = () => {
           <Route path='/payment' component={PaymentView} />
           <Route path='/placeorder' component={PlaceOrderView} />
           <Route path='/order/:id' component={OrderView} />
+          <Route path='/users' component={UserListView} />
         </Container>
       </main>
       <Footer />
