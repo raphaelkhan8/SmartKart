@@ -84,7 +84,6 @@ const updateUserProfile = asyncErrorHandler(async (req, res) => {
 
     user.name = req.body.name || user.name
     user.email = req.body.email || user.email
-    user.isAdmin = req.body.isAdmin || user.isAdmin
 
     if (req.body.password) {
       user.password = req.body.password
@@ -107,16 +106,52 @@ const updateUserProfile = asyncErrorHandler(async (req, res) => {
 })
 
 
-// Gets all users from database (needs admin privileges))
+// Gets all users from database (needs admin privileges)
 const getAllUsers = asyncErrorHandler(async (req, res) => {
   const users = await User.find({})
   res.json(users)
 })
 
 
-// Deletes a user
-const deleteUser = asyncErrorHandler(async (req, res) => {
+// Get user by id (needs admin privileges)
+const getUserById = asyncErrorHandler(async (req, res) => {
   const user = await User.findById(req.params.id)
+  if (user) {
+    res.json(user)
+  } else {
+    res.status(404)
+    throw new Error('User not found')
+  }
+})
+
+
+// Update user's admin status (needs admin privileges)
+const updateAdminStatus = asyncErrorHandler(async (req, res) => {
+  const user = await User.findById(req.params.id)
+
+  if (user) {
+
+    user.isAdmin = req.body.isAdmin
+
+    const updatedUser = await user.save()
+    
+    res.json({ 
+      _id: updatedUser._id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      isAdmin: updatedUser.isAdmin,
+    })
+
+  } else {
+    res.status(404)
+    throw new Error('User not found')
+  }
+})
+
+
+// Deletes a user (needs admin privileges)
+const deleteUser = asyncErrorHandler(async (req, res) => {
+  const user = await User.findById(req.params.id).select('-password')
   
   if (user) {
     await user.remove()
@@ -129,4 +164,4 @@ const deleteUser = asyncErrorHandler(async (req, res) => {
 
 
 
-module.exports = { createUser, authUser, getUserProfile, updateUserProfile, getAllUsers, deleteUser } 
+module.exports = { createUser, authUser, getUserProfile, updateUserProfile, getAllUsers, getUserById, updateAdminStatus, deleteUser } 

@@ -5,7 +5,7 @@ import {  USER_LIST_FAIL, USER_LIST_REQUEST, USER_LIST_SUCCESS,
   USER_LOGIN_FAIL, USER_LOGIN_REQUEST, USER_LOGIN_SUCCESS, USER_LOGOUT, 
   USER_REGISTER_FAIL, USER_REGISTER_REQUEST, USER_REGISTER_SUCCESS, 
   USER_UPDATE_PROFILE_FAIL, USER_UPDATE_PROFILE_REQUEST, USER_UPDATE_PROFILE_SUCCESS, 
-  USER_DELETE_SUCCESS, USER_DELETE_FAIL, USER_DELETE_REQUEST
+  USER_DELETE_SUCCESS, USER_DELETE_FAIL, USER_DELETE_REQUEST, USER_UPDATE_ADMIN_REQUEST, USER_UPDATE_ADMIN_SUCCESS, USER_UPDATE_ADMIN_FAIL
 } from '../constants/userConstants'
 
 
@@ -184,6 +184,36 @@ export const listUsers = () => async (dispatch, getState) => {
   } catch (error) {
     dispatch({
       type: USER_LIST_FAIL,
+      payload: error.response && error.response.data.message ? error.response.data.message : error.message
+    })
+  }
+}
+
+
+// sends dispatch request to update passed-in user's admin status
+export const updateUserAdmin = (user) => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: USER_UPDATE_ADMIN_REQUEST
+    })
+
+    const { token } = getState().userLogin.userInfo
+
+    const config = {
+      headers: { 
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      }
+    }
+
+    const { data } = await axios.put(`/api/users/${user._id}`, user, config)
+
+    dispatch({ type: USER_UPDATE_ADMIN_SUCCESS })
+    dispatch({ type: USER_DETAILS_SUCCESS, payload: data })
+
+  } catch (error) {
+    dispatch({
+      type: USER_UPDATE_ADMIN_FAIL,
       payload: error.response && error.response.data.message ? error.response.data.message : error.message
     })
   }
