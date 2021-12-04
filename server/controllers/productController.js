@@ -15,5 +15,19 @@ const getProductById = asyncErrorHandler(async (req, res) => {
   foundProduct ? res.json(foundProduct) : res.status(404).json({ message: 'Product Not Found'})
 })
 
+// Delete product (need admin credentials)
+const deleteProduct = asyncErrorHandler(async (req, res) => {
+  const id = req.params.id
+  const foundProduct = await Product.findById(id)
 
-module.exports = { getProducts, getProductById }
+  if (foundProduct) {
+    await foundProduct.remove()
+    res.json({ message: 'Product removed' })
+  } else {
+    res.status(404)
+    throw new Error('Product Not Found')
+  }
+})
+
+
+module.exports = { getProducts, getProductById, deleteProduct }
