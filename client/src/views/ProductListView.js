@@ -4,7 +4,7 @@ import { LinkContainer } from 'react-router-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
-import { listProducts } from '../actions/productActions'
+import { listProducts, deleteProduct } from '../actions/productActions'
 
 const ProductListView = ({ history, match }) => {
 
@@ -16,6 +16,9 @@ const ProductListView = ({ history, match }) => {
 	const userLogin = useSelector(state => state.userLogin)
 	const { userInfo } = userLogin
 
+	const productDelete = useSelector(state => state.productDelete)
+	const { loading:loadingDelete, error:errorDelete, success:successDelete } = productDelete
+
   // only send dispatch if user is logged-in and an admin
   useEffect(() => {
 		if (userInfo && userInfo.isAdmin) {
@@ -23,7 +26,7 @@ const ProductListView = ({ history, match }) => {
 		} else {
 			history.push('/login')
 		}
-  }, [dispatch, history, userInfo])
+  }, [dispatch, history, userInfo, successDelete])
 	
 
 	const createProductHandler = (product) => {
@@ -34,7 +37,7 @@ const ProductListView = ({ history, match }) => {
 
 	const deleteProductHandler = (productId) => {
 		if (window.confirm('Are you sure you want to delete this product?')) {
-			// DELETE PRODUCT
+			dispatch(deleteProduct(productId))
 		}
 	}
 
@@ -51,6 +54,8 @@ const ProductListView = ({ history, match }) => {
 					</Button>
 				</Col>
 			</Row>
+			{loadingDelete && <Loader />}
+			{errorDelete && <Message variant='danger'>{errorDelete}</Message>}
 			{loading ? <Loader /> : products ?
 			(<Table striped bordered hover responsive className='table-sm'>
 				<thead>
