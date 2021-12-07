@@ -8,12 +8,14 @@ const getProducts = asyncErrorHandler(async (req, res) => {
   res.json(products)
 })
 
+
 // Get product by id
 const getProductById = asyncErrorHandler(async (req, res) => {
   const id = req.params.id
   const foundProduct = await Product.findById(id)
   foundProduct ? res.json(foundProduct) : res.status(404).json({ message: 'Product Not Found'})
 })
+
 
 // Delete product (need admin credentials)
 const deleteProduct = asyncErrorHandler(async (req, res) => {
@@ -30,4 +32,49 @@ const deleteProduct = asyncErrorHandler(async (req, res) => {
 })
 
 
-module.exports = { getProducts, getProductById, deleteProduct }
+// Create new product (need admin credentials)
+const createProduct = asyncErrorHandler(async (req, res) => {
+  const newProduct = new Product({
+    user: req.user._id,
+    name: 'Sample name',
+    image: '/images/sample.jpg',
+    description: 'Sample description',
+    category: 'Sample category',
+    brand: 'Sample brand',
+    price: 0,
+    countInStock: 0,
+    rating: 0,
+    numReviews: 0,
+  })
+
+  const createdProduct = await newProduct.save()
+  res.status(201).json(createdProduct)
+})
+
+
+// Update product (need admin credentials)
+const updateProduct = asyncErrorHandler(async (req, res) => {
+  const { name, image, description, category, brand, price, countInStock } = req.body
+
+  const foundProduct = await Product.findById(req.params.id)
+
+  if (foundProduct) {
+    foundProduct.name = name
+    foundProduct.image = image
+    foundProduct.description = description
+    foundProduct.category = category
+    foundProduct.brand = brand
+    foundProduct.price = price
+    foundProduct.countInStock = countInStock
+
+    const updatedProduct = await foundProduct.save()
+    res.status(201).json(updatedProduct)
+
+  } else {
+    res.status(404)
+    throw new Error('Product not found')
+  }
+})
+
+
+module.exports = { getProducts, getProductById, deleteProduct, createProduct, updateProduct }
