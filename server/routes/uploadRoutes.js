@@ -10,7 +10,7 @@ const storage = multer.diskStorage({
 	filename(req, file, cb) {
 		// add timestamp to name using Date.now() to make each filename unique
 		// use path's extname method to dynamically get the file's extension (ex. .jpg or .png)
-		cb(null, `${file.filename}-${Date.now()}${path.extname(file.originalname)}`)
+		cb(null, `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`)
 	}
 })
 
