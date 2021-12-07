@@ -1,6 +1,7 @@
+import axios from 'axios'
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { Form, Button, FormGroup, FormLabel, FormControl } from 'react-bootstrap'
+import { Form, Button, FormGroup, FormLabel, FormControl, FormFile } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import FormContainer from '../components/FormContainer'
 import Message from '../components/Message'
@@ -19,6 +20,7 @@ const ProductEditView = ({ match, history }) => {
 	const [image, setImage] = useState('')
 	const [price, setPrice] = useState(0)
 	const [countInStock, setCountInStock] = useState(0)
+	const [uploading, setUploading] = useState(false)
 
   const dispatch = useDispatch()
 
@@ -32,21 +34,45 @@ const ProductEditView = ({ match, history }) => {
 			dispatch({ type: PRODUCT_UPDATE_RESET })
 			history.push('/admin/productlist')
 		} else {
-				// if product is empty or it's id doesn't match the productId in the url, dispatch listProductDetails
-				if (!product.name || product._id !== productId) {
-					dispatch(listProductDetails(productId))
-					// else (if state's product is correct), fill in form with product details
-				} else {
-					setName(product.name)
-					setBrand(product.brand)
-					setCategory(product.category)
-					setDescription(product.description)
-					setImage(product.image)
-					setPrice(product.price)
-					setCountInStock(product.countInStock)
-				}
+			// if product is empty or it's id doesn't match the productId in the url, dispatch listProductDetails
+			if (!product.name || product._id !== productId) {
+				dispatch(listProductDetails(productId))
+				// else (if state's product is correct), fill in form with product details
+			} else {
+				setName(product.name)
+				setBrand(product.brand)
+				setCategory(product.category)
+				setDescription(product.description)
+				setImage(product.image)
+				setPrice(product.price)
+				setCountInStock(product.countInStock)
+			}
 		}
   }, [dispatch, history, product, productId, successUpdate])
+
+	const uploadFileHandler = async (e) => {
+		const file = e.target.files[0]
+		const formData = new FormData()
+		formData.append('image', file)
+		setUploading(true)
+
+		try {
+			const config = {
+				headers: {
+					'Content-Type': 'multipart/form-data'
+				}
+			}
+
+			const { data } = await axios.post('/api/upload', formData, config)
+			console.log(data)
+			setImage(data)
+			setUploading(false)
+
+		} catch(error) {
+			console.error(error)
+			setUploading(false)
+		}
+	}
 
   const submitHandler = (e) => {
     e.preventDefault()
@@ -99,6 +125,8 @@ const ProductEditView = ({ match, history }) => {
 							<FormControl type='text' placeholder='Enter image url' value={image} 
 								onChange={(e) => setImage(e.target.value)}>
 							</FormControl>
+							<FormFile id='image-file' custom onChange={uploadFileHandler}></FormFile>
+							{uploading && <Loader />}
 						</FormGroup>
 
 						<FormGroup controlId='price'>
