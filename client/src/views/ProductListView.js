@@ -4,7 +4,8 @@ import { LinkContainer } from 'react-router-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
-import { listProducts, deleteProduct } from '../actions/productActions'
+import { listProducts, deleteProduct, createProduct } from '../actions/productActions'
+import { PRODUCT_CREATE_RESET } from '../constants/productConstants'
 
 const ProductListView = ({ history, match }) => {
 
@@ -19,20 +20,28 @@ const ProductListView = ({ history, match }) => {
 	const productDelete = useSelector(state => state.productDelete)
 	const { loading:loadingDelete, error:errorDelete, success:successDelete } = productDelete
 
-  // only send dispatch if user is logged-in and an admin
+	const productCreate = useSelector(state => state.productCreate)
+	const { loading:loadingCreate, error:errorCreate, success:successCreate, product:createdProduct } = productCreate
+
   useEffect(() => {
-		if (userInfo && userInfo.isAdmin) {
-			dispatch(listProducts())
-		} else {
+		// reset productCreate state when page is rendered
+		dispatch({ type: PRODUCT_CREATE_RESET })
+		// if user is NOT an admin, redirect to login page
+		if (!userInfo.isAdmin) {
 			history.push('/login')
+		} 
+		// if product successfully created, redirect to product-edit page
+		if (successCreate) {
+			history.push(`/admin/product/${createdProduct._id}/edit`)
+			// else, get list of products
+		} else {
+			dispatch(listProducts())
 		}
-  }, [dispatch, history, userInfo, successDelete])
+  }, [dispatch, history, userInfo, successDelete, successCreate, createdProduct])
 	
 
-	const createProductHandler = (product) => {
-		if (window.confirm('Are you sure you want to add this product?')) {
-			// CREATE PRODUCT
-		}
+	const createProductHandler = () => {
+		dispatch(createProduct())
 	}
 
 	const deleteProductHandler = (productId) => {
@@ -56,6 +65,8 @@ const ProductListView = ({ history, match }) => {
 			</Row>
 			{loadingDelete && <Loader />}
 			{errorDelete && <Message variant='danger'>{errorDelete}</Message>}
+			{loadingCreate && <Loader />}
+			{errorCreate && <Message variant='danger'>{errorCreate}</Message>}
 			{loading ? <Loader /> : products ?
 			(<Table striped bordered hover responsive className='table-sm'>
 				<thead>
