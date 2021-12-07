@@ -6,6 +6,9 @@ node_modules/
 /client/.pnp
 /client/.pnp.js
 
+# uploaded images
+/uploads
+
 # testing
 /coverage
 
