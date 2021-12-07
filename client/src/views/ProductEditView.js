@@ -5,7 +5,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import FormContainer from '../components/FormContainer'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
-import { listProductDetails } from '../actions/productActions'
+import { listProductDetails, updateProduct } from '../actions/productActions'
+import { PRODUCT_UPDATE_RESET } from '../constants/productConstants'
 
 const ProductEditView = ({ match, history }) => {
 
@@ -23,26 +24,36 @@ const ProductEditView = ({ match, history }) => {
 
   const { loading, error, product } = useSelector(state => state.productDetails)
 
+	const { loading:loadingUpdate, error:errorUpdate, success:successUpdate } = useSelector(state => state.productUpdate)
+
   useEffect(() => {
-		// if product is empty or it's id doesn't match the productId in the url, dispatch listProductDetails
-		if (!product.name || product._id !== productId) {
-			dispatch(listProductDetails(productId))
-		// else (if state's product is correct), fill in form with product details
+		// if product is successfully updated, reset productUpdate state and redirect to product list page
+		if (successUpdate) {
+			dispatch({ type: PRODUCT_UPDATE_RESET })
+			history.push('/admin/productlist')
 		} else {
-			setName(product.name)
-			setBrand(product.brand)
-			setCategory(product.category)
-			setDescription(product.description)
-			setImage(product.image)
-			setPrice(product.price)
-			setCountInStock(product.countInStock)
+				// if product is empty or it's id doesn't match the productId in the url, dispatch listProductDetails
+				if (!product.name || product._id !== productId) {
+					dispatch(listProductDetails(productId))
+					// else (if state's product is correct), fill in form with product details
+				} else {
+					setName(product.name)
+					setBrand(product.brand)
+					setCategory(product.category)
+					setDescription(product.description)
+					setImage(product.image)
+					setPrice(product.price)
+					setCountInStock(product.countInStock)
+				}
 		}
-  }, [dispatch, history, product, productId])
+  }, [dispatch, history, product, productId, successUpdate])
 
   const submitHandler = (e) => {
     e.preventDefault()
 		if (window.confirm(`Are you sure you want to update this product?`)) {
-			// UPDATE PRODUCT
+			dispatch(updateProduct({
+				_id: productId, name, brand, category, description, image, price, countInStock
+			}))
 		}
   }
 
@@ -51,6 +62,8 @@ const ProductEditView = ({ match, history }) => {
 			<Link to='/admin/productlist' className='btn btn-light my-3'>Go Back</Link>
 			<FormContainer>
 				<h1>Edit Product</h1>
+				{loadingUpdate && <Loader />}
+				{errorUpdate && <Message variant='danger'>{errorUpdate}</Message>}
 				{loading ? <Loader /> : error ? (<Message variant='danger'>{error}</Message>) : (
 					<Form onSubmit={submitHandler}>
 						<FormGroup controlId='name'>
