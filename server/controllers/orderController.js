@@ -70,4 +70,11 @@ const getUserOrders = asyncErrorHandler(async (req, res) => {
 })
 
 
-module.exports = { createOrder, getOrderById, updateOrderToPaid, getUserOrders }
+// Get all orders (needs admin priviledges)
+const getAllOrders = asyncErrorHandler(async (req, res) => {
+  const orders = await Order.find({}).populate('user', 'id name')
+  res.json(orders)
+})
+
+
+module.exports = { createOrder, getOrderById, updateOrderToPaid, getUserOrders, getAllOrders }
