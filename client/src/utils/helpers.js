@@ -12,3 +12,7 @@ export const formatDate = (inputDate) => {
 
     return month + '/' + day + '/' + year + ' @ ' + hours + ':' + minutes + ampm
 }
+
+export const redXStyling = { color: 'red', display: 'inline-block', width: '100%', textAlign: 'center' }
+
+export const greenCheckStyling = { color: 'green', display: 'inline-block', width: '100%', textAlign: 'center' }
