@@ -1,6 +1,7 @@
 import axios from 'axios'
+import { CART_RESET } from '../constants/cartConstants'
 import { ORDER_USER_ORDERS_RESET } from '../constants/orderConstants'
-import {  USER_LIST_FAIL, USER_LIST_REQUEST, USER_LIST_SUCCESS, 
+import { USER_LIST_FAIL, USER_LIST_REQUEST, USER_LIST_SUCCESS, 
   USER_DETAILS_FAIL, USER_DETAILS_REQUEST, USER_DETAILS_RESET, USER_DETAILS_SUCCESS, 
   USER_LOGIN_FAIL, USER_LOGIN_REQUEST, USER_LOGIN_SUCCESS, USER_LOGOUT, 
   USER_REGISTER_FAIL, USER_REGISTER_REQUEST, USER_REGISTER_SUCCESS, 
@@ -45,7 +46,8 @@ export const login = (email, password) => async (dispatch) => {
 
 // sends dispatch to logout user and reset userDetails and userOrders state 
 export const logout = () => (dispatch) => {
-  localStorage.removeItem('userInfo')
+  localStorage.clear()
+  dispatch({ type: CART_RESET })
   dispatch({ type: USER_LOGOUT })
   dispatch({ type: USER_DETAILS_RESET })
   dispatch({ type: ORDER_USER_ORDERS_RESET })

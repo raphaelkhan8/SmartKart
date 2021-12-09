@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { Row, Col, ListGroup, ListGroupItem, Image, Form, Button, Card } from 'react-bootstrap'
@@ -11,6 +11,15 @@ const CartView = ({ history }) => {
 
   const cart = useSelector((state) => state.cart)
   const { cartItems } = cart
+ 
+  const userInfo = JSON.parse(localStorage.getItem('userInfo')) || {}
+
+  useEffect(() => {
+    // if user logs out, redirect to login
+    if (userInfo && !userInfo.name) {
+      history.push('/login')
+    }
+  }, [userInfo])
 
   const addToCartHandler = (id, quantity) => {
     dispatch(addToCart(id, quantity))
