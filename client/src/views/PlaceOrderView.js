@@ -10,7 +10,7 @@ const PlaceOrderView = ({ history }) => {
 	const dispatch = useDispatch()
 
 	const { shippingAddress, paymentMethod, cartItems } = useSelector(state => state.cart)
-	const { address, city, state, zipcode, country } = shippingAddress
+	const { address, city, state, zipcode, country } = shippingAddress || {}
 
 	// Calculate prices
 	const itemsPrice = (cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0)).toFixed(2)
