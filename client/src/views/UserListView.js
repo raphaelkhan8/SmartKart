@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
 import { listUsers, deleteUser } from '../actions/userActions'
+import { redXStyling, greenCheckStyling } from '../utils/helpers'
 
 const UserListView = ({ history }) => {
 
@@ -56,8 +57,8 @@ const UserListView = ({ history }) => {
 							<td>{user.name}</td>
 							<td><a href={`mailto:${user.email}`}>{user.email}</a></td>
 							<td>
-								{user.isAdmin ? (<i className='fas fa-check' style={{ color: 'green' }}></i>) : 
-									(<i className='fas fa-times' style={{ color: 'red' }}/>)}
+								{user.isAdmin ? (<i className='fas fa-check' style={ greenCheckStyling }></i>) : 
+									(<i className='fas fa-times' style={ redXStyling }/>)}
 							</td>
 							<td>
 								<LinkContainer to={`/admin/user/${user._id}/edit`}>

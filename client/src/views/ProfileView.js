@@ -7,7 +7,7 @@ import Loader from '../components/Loader'
 import { getUserDetails, updateUserProfile } from '../actions/userActions'
 import { getUserOrders } from '../actions/orderActions'
 import { USER_UPDATE_PROFILE_RESET } from '../constants/userConstants'
-import { formatDate } from '../utils/helpers'
+import { formatDate, redXStyling } from '../utils/helpers'
 
 const ProfileView = ({ history }) => {
 
@@ -58,8 +58,6 @@ const ProfileView = ({ history }) => {
     }
   }
 
-  const redXStyling = { color: 'red', display: 'inline-block', width: '100%', textAlign: 'center' }
-
   return <Row>
 		<Col md={3}>
 			{message && <Message variant='danger'>{message}</Message>}
@@ -97,11 +95,11 @@ const ProfileView = ({ history }) => {
 			(<Table striped bordered hover responsive className='table-sm'>
 				<thead>
 					<tr>
-						<th>ID</th>
-						<th>DATE</th>
+						<th>ORDER ID</th>
+						<th>ORDER DATE</th>
 						<th>TOTAL</th>
-						<th>PAID</th>
-						<th>DELIVERED</th>
+						<th>PAYMENT STATUS</th>
+						<th>DELIVERY STATUS</th>
 						<th>DETAILS</th>
 					</tr>
 				</thead>
@@ -110,9 +108,9 @@ const ProfileView = ({ history }) => {
 						<tr key={order._id}>
 							<td>{order._id}</td>
 							<td>{formatDate(order.createdAt)}</td>
-							<td>{order.totalPrice}</td>
-							<td>{order.isPaid ? formatDate(order.paidAt) : <i className='fas fa-times' style={ redXStyling }></i> }</td>
-							<td>{order.isDelivered ? formatDate(order.deliveredAt) : <i className='fas fa-times' style={ redXStyling }></i> }</td>
+							<td>${order.totalPrice}</td>
+							<td>{order.isPaid ? 'PAID: ' + formatDate(order.paidAt) : <i className='fas fa-times' style={ redXStyling }></i> }</td>
+							<td>{order.isDelivered ? 'DELIVERED: ' + formatDate(order.deliveredAt) : <i className='fas fa-times' style={ redXStyling }></i> }</td>
 							<td>
 								<LinkContainer to={`/order/${order._id}`}>
 									<Button variant='light' className='btn-sm'>View Order</Button>
