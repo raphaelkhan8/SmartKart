@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { CART_RESET } from '../constants/cartConstants'
 import { ORDER_CREATE_REQUEST, ORDER_CREATE_SUCCESS, ORDER_CREATE_ERROR, 
 	ORDER_DETAILS_REQUEST, ORDER_DETAILS_SUCCESS, ORDER_DETAILS_ERROR, 
 	ORDER_PAY_REQUEST, ORDER_PAY_SUCCESS, ORDER_PAY_ERROR, 
@@ -28,6 +29,8 @@ export const createOrder = (order) => async (dispatch, getState) => {
 			type: ORDER_CREATE_SUCCESS,
 			payload: data
 		})
+
+		dispatch({ type: CART_RESET })
 
 	} catch (error) {
 		dispatch({
