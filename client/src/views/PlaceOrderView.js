@@ -5,6 +5,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import CheckoutSteps from '../components/CheckoutSteps'
 import Message from '../components/Message'
 import { createOrder } from '../actions/orderActions'
+import { USER_DETAILS_RESET } from '../constants/userConstants'
+import { ORDER_CREATE_RESET } from '../constants/orderConstants'
 
 const PlaceOrderView = ({ history }) => {
 	const dispatch = useDispatch()
@@ -23,6 +25,8 @@ const PlaceOrderView = ({ history }) => {
 	useEffect(() => {
 		if (order) {
 			history.push(`/order/${order._id}`)
+			dispatch({ type: USER_DETAILS_RESET })
+			dispatch({ type: ORDER_CREATE_RESET })
 		}
 		// eslint-disable-next-line
 	}, [history, success])
