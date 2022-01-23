@@ -6,8 +6,8 @@ import { Row, Col, ListGroup, Image, Card, ListGroupItem } from 'react-bootstrap
 import { useDispatch, useSelector } from 'react-redux'
 import Loader from '../components/Loader'
 import Message from '../components/Message'
-import { getOrderDetails, payOrder } from '../actions/orderActions'
-import { ORDER_PAY_RESET } from '../constants/orderConstants'
+import { getOrderDetails, payOrder, deliverOrder } from '../actions/orderActions'
+import { ORDER_PAY_RESET, ORDER_DELIVER_RESET } from '../constants/orderConstants'
 import { formatDate } from '../utils/helpers'
 
 const OrderView = ({ match }) => {
@@ -22,8 +22,9 @@ const OrderView = ({ match }) => {
 		 user, isPaid, paidAt, isDelivered, deliveredAt } = order || {}
 	const { address, city, state, zipcode, country } = shippingAddress || {}
 
-	// rename loading to loadingPay and success to successPay in order to avoid confusion
+	// rename loading and success to unique names (ex. loading -> loadingPay) in order to avoid confusion
 	const { loading: loadingPay, success: successPay } = useSelector(state => state.orderPaid)
+	const { loading: loadingDeliver, success: successDeliver } = useSelector(state => state.orderDeliver)
 
 	useEffect(() => {
 		// dynamically add PayPal script to OrderView html
@@ -39,8 +40,9 @@ const OrderView = ({ match }) => {
 			document.body.appendChild(script)
 		}
 
-		if (!order || successPay) {
+		if (!order || successPay || successDeliver) {
 			dispatch({ type: ORDER_PAY_RESET })
+			dispatch({ type: ORDER_DELIVER_RESET })
 			dispatch(getOrderDetails(orderId))
 		} else if (!order.isPaid) {
 			if (!window.paypal) {
