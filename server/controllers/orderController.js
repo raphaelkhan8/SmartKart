@@ -63,6 +63,25 @@ const updateOrderToPaid = asyncErrorHandler(async (req, res) => {
 })
 
 
+// Set order to 'out for delivery'
+const updateOrderToOutForDelivery = asyncErrorHandler(async (req, res) => {
+  const order = await Order.findById(req.params.id)
+
+  if (order) {
+    order.isDelivered = true
+    order.deliveredAt = Date.now()
+
+    const updateOrder = await order.save()
+
+    res.json(updateOrder)
+
+  } else {
+    res.status(404)
+    throw new Error('Order not found')
+  }
+})
+
+
 // Get a logged-in user's orders
 const getUserOrders = asyncErrorHandler(async (req, res) => {
   const orders = await Order.find({ user: req.user._id })
@@ -77,4 +96,4 @@ const getAllOrders = asyncErrorHandler(async (req, res) => {
 })
 
 
-module.exports = { createOrder, getOrderById, updateOrderToPaid, getUserOrders, getAllOrders }
+module.exports = { createOrder, getOrderById, updateOrderToPaid, updateOrderToOutForDelivery, getUserOrders, getAllOrders }
