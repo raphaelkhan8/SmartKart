@@ -3,8 +3,9 @@ import { CART_RESET } from '../constants/cartConstants'
 import { ORDER_CREATE_REQUEST, ORDER_CREATE_SUCCESS, ORDER_CREATE_ERROR, 
 	ORDER_DETAILS_REQUEST, ORDER_DETAILS_SUCCESS, ORDER_DETAILS_ERROR, 
 	ORDER_PAY_REQUEST, ORDER_PAY_SUCCESS, ORDER_PAY_ERROR, 
+	ORDER_DELIVER_REQUEST, ORDER_DELIVER_SUCCESS, ORDER_DELIVER_ERROR,
 	ORDER_USER_ORDERS_REQUEST, ORDER_USER_ORDERS_SUCCESS, ORDER_USER_ORDERS_ERROR,
-	ORDER_LIST_REQUEST, ORDER_LIST_SUCCESS, ORDER_LIST_ERROR, ORDER_DELIVER_REQUEST, ORDER_DELIVER_SUCCESS, ORDER_DELIVER_ERROR 
+	ORDER_LIST_REQUEST, ORDER_LIST_SUCCESS, ORDER_LIST_ERROR,
 } from '../constants/orderConstants'
 
 // sends dispatch request to server to save order
@@ -106,7 +107,7 @@ export const payOrder = (orderId, paymentResult) => async (dispatch, getState) =
 
 
 // sends dispatch request to set order's delivery status to true
-export const deliverOrder = (order) => async (dispatch, getState) => {
+export const deliverOrder = (orderId) => async (dispatch, getState) => {
 	try {
 		dispatch({
 			type: ORDER_DELIVER_REQUEST
@@ -120,7 +121,7 @@ export const deliverOrder = (order) => async (dispatch, getState) => {
 			}
 		}
 
-		const { data } = await axios.put(`/api/orders/${order._id}/deliver`, {}, config)
+		const { data } = await axios.put(`/api/orders/${orderId}/deliver`, {}, config)
 
 		dispatch({
 			type: ORDER_DELIVER_SUCCESS,
