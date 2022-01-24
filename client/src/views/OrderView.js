@@ -23,7 +23,6 @@ const OrderView = ({ history, match }) => {
 	const { _id, orderItems, paymentMethod, shippingAddress, itemsPrice, shippingPrice, taxPrice, totalPrice,
 			user, isPaid, paidAt, isDelivered, deliveredAt } = order || {}
 	const { address, city, state, zipcode, country } = shippingAddress || {}
-	const { isAdmin } = userInfo || {}
 
 	// rename loading and success to unique names (ex. loading -> loadingPay) in order to avoid confusion
 	const { loading: loadingPay, success: successPay } = useSelector(state => state.orderPaid)
@@ -58,7 +57,7 @@ const OrderView = ({ history, match }) => {
 				setSdkReady(true)
 			}
 		}
-	}, [dispatch, order, orderId, successPay, loadingDeliver, successDeliver])
+	}, [dispatch, userInfo, order, orderId, successPay, loadingDeliver, successDeliver])
 
 	const successPaymentHandler = (paymentResult) => {
 		dispatch(payOrder(orderId, paymentResult))
@@ -70,6 +69,7 @@ const OrderView = ({ history, match }) => {
 
 	return loading ? <Loader /> : error ? <Message variant='danger'>{error}</Message> : 
 		<div>
+			<Link to='/admin/orderlist' className='btn btn-light my-3'>Go Back</Link>
 			<h1>Order {_id}</h1>
 			<Row>
 				<Col md={8}>
@@ -168,7 +168,7 @@ const OrderView = ({ history, match }) => {
 							)}
 
 							{loadingDeliver && <Loader />}
-							{isAdmin && isPaid && !isDelivered && (
+							{userInfo && userInfo.isAdmin && isPaid && !isDelivered && (
 								<ListGroupItem> 
 									<Button type='button' className='btn btn-block' onClick={deliverHandler}>
 										Mark As Delivered
