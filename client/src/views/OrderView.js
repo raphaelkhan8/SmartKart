@@ -2,15 +2,15 @@ import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { PayPalButton } from 'react-paypal-button-v2'
 import axios from 'axios'
-import { Row, Col, ListGroup, Image, Card, ListGroupItem } from 'react-bootstrap'
+import { Row, Col, ListGroup, Image, Card, ListGroupItem, Button } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import Loader from '../components/Loader'
 import Message from '../components/Message'
-import { getOrderDetails, payOrder } from '../actions/orderActions'
-import { ORDER_PAY_RESET } from '../constants/orderConstants'
+import { getOrderDetails, payOrder, deliverOrder } from '../actions/orderActions'
+import { ORDER_PAY_RESET, ORDER_DELIVER_RESET } from '../constants/orderConstants'
 import { formatDate } from '../utils/helpers'
 
-const OrderView = ({ match }) => {
+const OrderView = ({ history, match }) => {
 	const dispatch = useDispatch()
 
 	const orderId = match.params.id
@@ -18,14 +18,21 @@ const OrderView = ({ match }) => {
 	const [sdkReady, setSdkReady] = useState(false)
 
 	const { order, loading, error } = useSelector(state => state.orderDetails)
-	const { orderItems, paymentMethod, shippingAddress, itemsPrice, shippingPrice, taxPrice, totalPrice,
-		 user, isPaid, paidAt, isDelivered, deliveredAt } = order || {}
+	const { userInfo } = useSelector(state => state.userLogin)
+
+	const { _id, orderItems, paymentMethod, shippingAddress, itemsPrice, shippingPrice, taxPrice, totalPrice,
+			user, isPaid, paidAt, isDelivered, deliveredAt } = order || {}
 	const { address, city, state, zipcode, country } = shippingAddress || {}
 
-	// rename loading to loadingPay and success to successPay in order to avoid confusion
+	// rename loading and success to unique names (ex. loading -> loadingPay) in order to avoid confusion
 	const { loading: loadingPay, success: successPay } = useSelector(state => state.orderPaid)
+	const { loading: loadingDeliver, success: successDeliver } = useSelector(state => state.orderDeliver)
 
 	useEffect(() => {
+		if (!userInfo) {
+			history.push('/login')
+		}
+
 		// dynamically add PayPal script to OrderView html
 		const addPayPalScript = async () => {
 			const { data: clientId } = await axios.get('/api/config/paypal')
@@ -39,8 +46,9 @@ const OrderView = ({ match }) => {
 			document.body.appendChild(script)
 		}
 
-		if (!order || successPay) {
+		if (!order || successPay || successDeliver || order._id !== orderId) {
 			dispatch({ type: ORDER_PAY_RESET })
+			dispatch({ type: ORDER_DELIVER_RESET })
 			dispatch(getOrderDetails(orderId))
 		} else if (!order.isPaid) {
 			if (!window.paypal) {
@@ -49,17 +57,20 @@ const OrderView = ({ match }) => {
 				setSdkReady(true)
 			}
 		}
-	}, [dispatch, order, orderId, successPay])
+	}, [dispatch, userInfo, order, orderId, successPay, loadingDeliver, successDeliver])
 
 	const successPaymentHandler = (paymentResult) => {
-		console.log(paymentResult)
 		dispatch(payOrder(orderId, paymentResult))
 	}
 
+	const deliverHandler = () => {
+		dispatch(deliverOrder(_id))
+	}
 
 	return loading ? <Loader /> : error ? <Message variant='danger'>{error}</Message> : 
 		<div>
-			<h1>Order {order._id}</h1>
+			<Link to='/admin/orderlist' className='btn btn-light my-3'>Go Back</Link>
+			<h1>Order {_id}</h1>
 			<Row>
 				<Col md={8}>
 					<ListGroup variant='flush'>
@@ -153,6 +164,15 @@ const OrderView = ({ match }) => {
 									{!sdkReady ? <Loader /> : (
 										<PayPalButton amount={totalPrice} onSuccess={successPaymentHandler} />
 									)}
+								</ListGroupItem>
+							)}
+
+							{loadingDeliver && <Loader />}
+							{userInfo && userInfo.isAdmin && isPaid && !isDelivered && (
+								<ListGroupItem> 
+									<Button type='button' className='btn btn-block' onClick={deliverHandler}>
+										Mark As Delivered
+									</Button>
 								</ListGroupItem>
 							)}
 						</ListGroup>
