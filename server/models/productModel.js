@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const reviewSchema = require('../models/reviewModel')
 
 const productSchema = mongoose.Schema({
   user: {
@@ -46,11 +47,7 @@ const productSchema = mongoose.Schema({
     required: true,
     default: 0
   },
-  reviews: [ { 
-    type: mongoose.Schema.Types.ObjectId, 
-    required: true,
-    ref: 'Review'
-  }, ]
+  reviews: [ reviewSchema ]
 }, {
   timestamps: true
 })
