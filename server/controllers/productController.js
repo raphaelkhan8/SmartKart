@@ -102,7 +102,7 @@ const createProductReview = asyncErrorHandler(async (req, res) => {
  
     if (alreadyReviewed) {
       res.status(400)
-      throw new Error('You can only review each product once')
+      throw new Error('You have already reviewed this product')
     }
  
     const review = {

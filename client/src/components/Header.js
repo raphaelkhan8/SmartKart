@@ -1,10 +1,11 @@
 import React from 'react'
+import { withRouter } from 'react-router'
 import { useDispatch, useSelector } from 'react-redux'
 import { Navbar, Nav, Container, NavDropdown } from 'react-bootstrap'
 import { LinkContainer } from 'react-router-bootstrap'
 import { logout } from '../actions/userActions'
 
-const Header = () => {
+const Header = ({ history }) => {
 
   const dispatch = useDispatch()
 
@@ -12,6 +13,7 @@ const Header = () => {
 
   const handleLogout = () => {
     dispatch(logout())
+    history.push('/login')
   }
 
   return (
@@ -57,4 +59,4 @@ const Header = () => {
   )
 }
 
-export default Header
+export default withRouter(Header)
