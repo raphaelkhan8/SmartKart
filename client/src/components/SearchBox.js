@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState } from 'react'
+import { withRouter } from 'react-router-dom'
 import { Form, Button, FormControl } from 'react-bootstrap'
 
 const SearchBox = ({ history }) => {
@@ -17,13 +18,11 @@ const SearchBox = ({ history }) => {
 
     return ( 
         <Form onSubmit={submitHandler} inline>
-            <FormControl type='text' name='' placeHolder='Search Products...' className='mr-sm-2 ml-sm-5' onChange={(e) => setKeyword(e.target.value)}>
-                <Button type='submit' variant='outline-success' className='p-2'>
-                    Search
-                </Button>
-            </FormControl>
+            <FormControl type='text' name='q' placeHolder='Search Products...' className='mr-sm-2 ml-sm-5' 
+                onChange={(e) => setKeyword(e.target.value)}></FormControl>
+            <Button type='submit' variant='outline-success' className='p-2'>Search</Button>
         </Form>
     )
 }
 
-export default SearchBox
+export default withRouter(SearchBox)
