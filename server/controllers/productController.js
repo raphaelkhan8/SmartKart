@@ -2,9 +2,19 @@ const asyncErrorHandler = require('express-async-handler')
 const Product = require('../models/productModel')
 const Order = require('../models/orderModel')
 
-// Get all products
+// Get all products (or a specific product if keyword is not an empty string)
 const getProducts = asyncErrorHandler(async (req, res) => {
-  const products = await Product.find({})
+  const keyword = req.query.keyword ? {
+    /* If keyword exists, set the name property to the keyword to fetch that specific product. 
+       Using regex to match substrings with axtual name (ex. iph will still match with iphone).
+       Passing in i to options for case-insensitive search */
+    name: {
+      $regex: req.query.keyword,
+      $options: 'i'
+    }
+  // else, pass-in an empty object to get all products
+  } : {}
+  const products = await Product.find({ ...keyword })
   res.json(products)
 })
 
