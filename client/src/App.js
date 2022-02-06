@@ -29,6 +29,7 @@ const App = () => {
           <Route path='/register' component={RegisterView} />
           <Route path='/profile' component={ProfileView} />
           <Route path='/product/:id' component={ProductView} />
+          <Route path='/search/:keyword' component={HomeView} />
           <Route path='/cart/:id?' component={CartView} />
           <Route path='/shipping' component={ShippingView} />
           <Route path='/payment' component={PaymentView} />
