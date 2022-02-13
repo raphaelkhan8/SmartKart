@@ -25,11 +25,13 @@ const App = () => {
       <main className='py-3'>
         <Container>
           <Route path='/' component={HomeView} exact />
+          <Route path='/page/:pageNumber' component={HomeView} exact />
           <Route path='/login' component={LoginView} />
           <Route path='/register' component={RegisterView} />
           <Route path='/profile' component={ProfileView} />
           <Route path='/product/:id' component={ProductView} />
           <Route path='/search/:keyword' component={HomeView} />
+          <Route path='/search/:keyword/page/:pageNumber' component={HomeView} exact />
           <Route path='/cart/:id?' component={CartView} />
           <Route path='/shipping' component={ShippingView} />
           <Route path='/payment' component={PaymentView} />
