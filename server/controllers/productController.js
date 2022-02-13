@@ -5,7 +5,7 @@ const Order = require('../models/orderModel')
 // Get all products (or a specific product if keyword is not an empty string)
 const getProducts = asyncErrorHandler(async (req, res) => {
   // pageSize will be used for pagination 
-  const pageSize = 2
+  const pageSize = 8
   const page = Number(req.query.pageNumber) || 1
 
   const keyword = req.query.keyword ? {
