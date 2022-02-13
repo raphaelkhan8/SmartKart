@@ -4,6 +4,10 @@ const Order = require('../models/orderModel')
 
 // Get all products (or a specific product if keyword is not an empty string)
 const getProducts = asyncErrorHandler(async (req, res) => {
+  // pageSize will be used for pagination 
+  const pageSize = 8
+  const page = Number(req.query.pageNumber) || 1
+
   const keyword = req.query.keyword ? {
     /* If keyword exists, set the name property to the keyword to fetch that specific product. 
        Using regex to match substrings with axtual name (ex. iph will still match with iphone).
@@ -14,8 +18,14 @@ const getProducts = asyncErrorHandler(async (req, res) => {
     }
   // else, pass-in an empty object to get all products
   } : {}
-  const products = await Product.find({ ...keyword })
-  res.json(products)
+
+  // Get the total number of products coming back from database
+  const productCount = await Product.countDocuments({ ...keyword })
+  // Use .limit to limit the number of Products returned to fit within the pageSize
+  const products = await Product.find({ ...keyword }).limit(pageSize).skip(pageSize * (page - 1))
+
+  // Send back the products, page number, and total number of pages
+  res.json({ products, page, pages: Math.ceil(productCount / pageSize) })
 })
 
 
