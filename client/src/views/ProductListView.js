@@ -60,7 +60,7 @@ const ProductListView = ({ history, match }) => {
 				<Col>
 					<h1>Products</h1>
 				</Col>
-				<Col md={2} md={{ span: 2, offset: 0 }}>
+				<Col md={{ span: 2, offset: 0 }}>
 					<Button className='my-3' onClick={createProductHandler}>
 						<i className='fas fa-plus'></i> Create Product
 					</Button>
