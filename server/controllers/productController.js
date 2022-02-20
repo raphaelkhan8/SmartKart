@@ -147,4 +147,11 @@ const createProductReview = asyncErrorHandler(async (req, res) => {
 })
 
 
-module.exports = { getProducts, getProductById, deleteProduct, createProduct, updateProduct, createProductReview }
+// Gets top rate products
+const getTopRatedProducts = asyncErrorHandler(async (req, res) => {
+  const products = await Product.find({}).sort({ rating: -1 }).limit(4)
+  res.json(products)
+})
+
+
+module.exports = { getProducts, getProductById, deleteProduct, createProduct, updateProduct, createProductReview, getTopRatedProducts }
