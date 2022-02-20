@@ -1,7 +1,7 @@
 import axios from 'axios'
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { Form, Button, FormGroup, FormLabel, FormControl, FormFile } from 'react-bootstrap'
+import { Form, Button, FormGroup, FormLabel, FormControl } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import FormContainer from '../components/FormContainer'
 import Message from '../components/Message'
@@ -125,7 +125,7 @@ const ProductEditView = ({ match, history }) => {
 							<FormControl type='text' placeholder='Enter image url' value={image} 
 								onChange={(e) => setImage(e.target.value)}>
 							</FormControl>
-							<FormFile id='image-file' custom onChange={uploadFileHandler}></FormFile>
+							<Form.file id='image-file' custom onChange={uploadFileHandler}></Form.file>
 							{uploading && <Loader />}
 						</FormGroup>
 
