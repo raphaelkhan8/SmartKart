@@ -6,10 +6,10 @@ const { protectRoutes, isAdmin } = require('../middleware/authMiddleware')
 
 router.get('/', getProducts)
 router.post('/', protectRoutes, isAdmin, createProduct)
+router.get('/toprated', getTopRatedProducts)
 router.get('/:id', getProductById)
 router.delete('/:id', protectRoutes, isAdmin, deleteProduct)
 router.put('/:id', protectRoutes, isAdmin, updateProduct)
 router.post('/:id/reviews', protectRoutes, createProductReview)
-router.get('/toprated', getTopRatedProducts)
 
 module.exports = router

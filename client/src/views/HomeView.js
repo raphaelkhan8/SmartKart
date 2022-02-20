@@ -6,6 +6,7 @@ import Product from '../components/Product'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
 import { listProducts } from '../actions/productActions'
+import ProductCarousel from '../components/ProductCarousel'
 
 const HomeView = ({ match }) => {
   const dispatch = useDispatch()
@@ -25,6 +26,7 @@ const HomeView = ({ match }) => {
 
   return (
     <div>
+      {!keyword && <ProductCarousel />}
       <h1>Latest Products</h1>
       {loading ? <Loader /> : 
         error ? <Message variant='danger'>{error}</Message> :
