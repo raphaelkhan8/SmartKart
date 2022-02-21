@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import FormContainer from '../components/FormContainer'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
+import Meta from '../components/Meta'
 import { listProductDetails, updateProduct } from '../actions/productActions'
 import { PRODUCT_UPDATE_RESET } from '../constants/productConstants'
 
@@ -85,6 +86,7 @@ const ProductEditView = ({ match, history }) => {
 
   return (
 		<>
+			<Meta title='Edit Product' />
 			<Link to='/admin/productlist' className='btn btn-light my-3'>Go Back</Link>
 			<FormContainer>
 				<h1>Edit Product</h1>
@@ -125,7 +127,7 @@ const ProductEditView = ({ match, history }) => {
 							<FormControl type='text' placeholder='Enter image url' value={image} 
 								onChange={(e) => setImage(e.target.value)}>
 							</FormControl>
-							<FormFile id='image-file' custom onChange={uploadFileHandler}></FormFile>
+							{<FormFile id='image-file' custom onChange={uploadFileHandler}></FormFile>}
 							{uploading && <Loader />}
 						</FormGroup>
 

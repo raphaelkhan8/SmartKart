@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useDispatch, useSelector  } from 'react-redux'
-import { Row, Col, Image, ListGroup, ListGroupItem, Card, Button, Form, FormGroup, FormLabel, FormControl, FormText } from 'react-bootstrap'
+import { Row, Col, Image, ListGroup, ListGroupItem, Card, Button, Form, FormGroup, FormLabel, FormControl } from 'react-bootstrap'
 import Rating from '../components/Rating'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
+import Meta from '../components/Meta'
 import { listProductDetails, createProductReview } from '../actions/productActions'
 import { addToCart } from '../actions/cartActions'
 import { PRODUCT_CREATE_REVIEW_RESET } from '../constants/productConstants'
@@ -54,6 +55,7 @@ const ProductView = ({ match, history }) => {
       { loading ? <Loader /> :
           error ? <Message variant='danger'>{error}</Message> : 
         ( <div>
+          <Meta title={name} />
             <Row>
               <Col md={6}>
                 <Image src={image} alt={name} fluid />

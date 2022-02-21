@@ -4,6 +4,7 @@ import { LinkContainer } from 'react-router-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
+import Meta from '../components/Meta'
 import { listUsers, deleteUser } from '../actions/userActions'
 import { redXStyling, greenCheckStyling } from '../utils/helpers'
 
@@ -37,45 +38,46 @@ const UserListView = ({ history }) => {
 
 
   return (
-    <div>
-      <h1>Users</h1>
-			{loading ? <Loader /> : users ?
-			(<Table striped bordered hover responsive className='table-sm'>
-				<thead>
-					<tr>
-						<th>ID</th>
-						<th>NAME</th>
-						<th>EMAIL</th>
-						<th>ADMIN</th>
-						<th>UPDATE</th>
-					</tr>
-				</thead>
-				<tbody>
-					{users.map(user => (
-						<tr key={user._id}>
-							<td>{user._id}</td>
-							<td>{user.name}</td>
-							<td><a href={`mailto:${user.email}`}>{user.email}</a></td>
-							<td>
-								{user.isAdmin ? (<i className='fas fa-check' style={ greenCheckStyling }></i>) : 
-									(<i className='fas fa-times' style={ redXStyling }/>)}
-							</td>
-							<td>
-								<LinkContainer to={`/admin/user/${user._id}/edit`}>
-									<Button variant='light' className='btn-sm'>
-										<i className='fas fa-edit'></i>
-									</Button>
-								</LinkContainer>
-								<Button variant='danger' className='btn-sm' onClick={() => deleteUserHandler(user._id)}>
-									<i className='fas fa-trash'></i>
-								</Button>
-							</td>
+    	<div>
+			<Meta title='Users List' />
+			<h1>Users</h1>
+				{loading ? <Loader /> : users ?
+				(<Table striped bordered hover responsive className='table-sm'>
+					<thead>
+						<tr>
+							<th>ID</th>
+							<th>NAME</th>
+							<th>EMAIL</th>
+							<th>ADMIN</th>
+							<th>UPDATE</th>
 						</tr>
-					))}
-				</tbody>
-			</Table>) 
+					</thead>
+					<tbody>
+						{users.map(user => (
+							<tr key={user._id}>
+								<td>{user._id}</td>
+								<td>{user.name}</td>
+								<td><a href={`mailto:${user.email}`}>{user.email}</a></td>
+								<td>
+									{user.isAdmin ? (<i className='fas fa-check' style={ greenCheckStyling }></i>) : 
+										(<i className='fas fa-times' style={ redXStyling }/>)}
+								</td>
+								<td>
+									<LinkContainer to={`/admin/user/${user._id}/edit`}>
+										<Button variant='light' className='btn-sm'>
+											<i className='fas fa-edit'></i>
+										</Button>
+									</LinkContainer>
+									<Button variant='danger' className='btn-sm' onClick={() => deleteUserHandler(user._id)}>
+										<i className='fas fa-trash'></i>
+									</Button>
+								</td>
+							</tr>
+						))}
+					</tbody>
+				</Table>) 
 			: <Message variant='danger'>{error}</Message>}
-    </div>
+    	</div>
 	)
 }
 

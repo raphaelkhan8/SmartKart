@@ -4,6 +4,7 @@ import { LinkContainer } from 'react-router-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
+import Meta from '../components/Meta'
 import { getAllOrders } from '../actions/orderActions'
 import { formatDate, redXStyling } from '../utils/helpers'
 
@@ -28,7 +29,8 @@ const OrderListView = ({ history }) => {
 
 
   return (
-    <div>
+		<div>
+			<Meta title='Orders List' />
 			<Row className='align-items-center'>
 				<Col>
 					<h1>Orders</h1>
@@ -68,7 +70,7 @@ const OrderListView = ({ history }) => {
 				</tbody>
 			</Table>) 
 			: <Message variant='danger'>{error}</Message>}
-    </div>
+    	</div>
 	)
 }
 
