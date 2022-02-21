@@ -19,10 +19,6 @@ if (NODE_ENV === 'development') {
   app.use(morgan('dev'))
 }
 
-app.get('/', (req, res) => {
-  res.send('Hello World!')
-})
-
 app.use(express.json())
 app.use('/api/products', productRouter)
 app.use('/api/users', userRouter)
@@ -31,7 +27,20 @@ app.use('/api/upload', uploadRouter)
 
 app.get('/api/config/paypal', (req, res) => res.send(PAYPAL_CLIENT_ID))
 
-app.use('/uploads', express.static(path.join(path.resolve(), '/uploads')))
+app.use('/uploads', express.static(path.join(__dirname, '/uploads')))
+
+const prodDirName =  __dirname.slice(0, __dirname.lastIndexOf('/'))
+
+if (NODE_ENV === 'production') {
+  app.use(express.static(path.join(prodDirName, '/client/build')))
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(prodDirName, 'client', 'build', 'index.html'))
+  })
+} else {
+  app.get('/', (req, res) => {
+    res.send('Hello World!')
+  })
+}
 
 app.use(notFound)
 app.use(errorHandler)
