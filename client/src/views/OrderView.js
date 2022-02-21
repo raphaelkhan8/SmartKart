@@ -6,6 +6,7 @@ import { Row, Col, ListGroup, Image, Card, ListGroupItem, Button } from 'react-b
 import { useDispatch, useSelector } from 'react-redux'
 import Loader from '../components/Loader'
 import Message from '../components/Message'
+import Meta from '../components/Meta'
 import { getOrderDetails, payOrder, deliverOrder } from '../actions/orderActions'
 import { ORDER_PAY_RESET, ORDER_DELIVER_RESET } from '../constants/orderConstants'
 import { formatDate } from '../utils/helpers'
@@ -69,6 +70,7 @@ const OrderView = ({ history, match }) => {
 
 	return loading ? <Loader /> : error ? <Message variant='danger'>{error}</Message> : 
 		<div>
+			<Meta title={`Order ${_id}`} />
 			<Link to='/admin/orderlist' className='btn btn-light my-3'>Go Back</Link>
 			<h1>Order {_id}</h1>
 			<Row>

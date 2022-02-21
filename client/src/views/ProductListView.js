@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import Paginate from '../components/Paginate'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
+import Meta from '../components/Meta'
 import { listProducts, deleteProduct, createProduct } from '../actions/productActions'
 import { PRODUCT_CREATE_RESET } from '../constants/productConstants'
 
@@ -56,6 +57,7 @@ const ProductListView = ({ history, match }) => {
 
   return (
     	<div>
+			<Meta title='Products List' />
 			<Row className='align-items-center'>
 				<Col>
 					<h1>Products</h1>
@@ -70,7 +72,7 @@ const ProductListView = ({ history, match }) => {
 			{errorDelete && <Message variant='danger'>{errorDelete}</Message>}
 			{loadingCreate && <Loader />}
 			{errorCreate && <Message variant='danger'>{errorCreate}</Message>}
-			{loading ? <Loader /> : products ?
+			{loading ? (<Loader />) : products ?
 			(<div>
 				<Table striped bordered hover responsive className='table-sm'>
 					<thead>
@@ -107,7 +109,7 @@ const ProductListView = ({ history, match }) => {
 
 				<Paginate pages={pages} page={page} isAdmin={true} />
 			</div>) 
-			: <Message variant='danger'>{error}</Message>}
+			: (<Message variant='danger'>{error}</Message>)}
     	</div>
 	)
 }
